@@ -1,9 +1,14 @@
 import '@/styles/globals.css'
 import Head from 'next/head'
-import { Bebas_Neue } from '@next/font/google'
+import { Bebas_Neue, Inter } from '@next/font/google'
 
 const bebasNeue = Bebas_Neue({
     weight: ['400'],
+    styles: ['normal'],
+    subsets: ['latin'],
+})
+const inter = Inter({
+    weight: ['400', '500', '600', '700'],
     styles: ['normal'],
     subsets: ['latin'],
 })
@@ -20,6 +25,7 @@ export default function App({ Component, pageProps }) {
             <style jsx global>{`
                 :root {
                     --gg-font-bebasneue: ${bebasNeue.style.fontFamily};
+                    --gg-font-inter: ${inter.style.fontFamily};
                 }
             `}
             </style>
