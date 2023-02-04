@@ -52,8 +52,6 @@ export default function Header() {
         const { error } = await supabase.auth.signOut()
     }
 
-    console.log(useUser())
-
     return (
         <header className={`${styles.header}`}>
             <nav className={`${styles.nav} container`}>
