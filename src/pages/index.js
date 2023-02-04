@@ -12,7 +12,6 @@ export default function Home() {
     return (
         <>
             <Head>
-
                 {/* SEO META */}
                 <title>{metaTitle}</title>
                 <meta name="description" content={metaDescription} />
@@ -31,7 +30,6 @@ export default function Home() {
                 <meta name="twitter:title" content={metaTitle} />
                 <meta name="twitter:description" content={metaDescription} />
                 <meta name="twitter:image" content={metaImage} />
-
             </Head>
         </>
     )
