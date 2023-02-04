@@ -28,8 +28,9 @@
 .loggedIn{
     margin-block: 7.5em;
 }
-.header{
+.section{
     display: flex;
+    flex-flow: row wrap;
     justify-content: space-between;
     align-items: center;
     padding: 1.5em 2em;
@@ -38,6 +39,12 @@
     border-radius: .5em;
     filter: drop-shadow(0 0 1.5rem rgba(0,0,0,0.15));
 }
+.section h2{
+    width: 100%;
+    display: block;
+    margin: 0;
+}
+
 
 /* PHOTONAME HEADER SEC */
 .photoName{
@@ -72,7 +79,7 @@
     display: flex;
     align-items: center;
 }
-.userActions button{
+.userActions a{
     background: var(--gg-yellow);
     border: none;
     cursor: pointer;
@@ -83,4 +90,5 @@
     font-family: var(--gg-font-inter);
     text-transform: uppercase;
     font-weight: 600;
+    text-decoration: none;
 }
