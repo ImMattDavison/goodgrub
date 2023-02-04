@@ -64,14 +64,25 @@ div:has( > .logoLink > .logo){
     padding: 0 1rem;
     transition: all 0.2s ease-in-out;
     text-transform: uppercase;
-    font-weight: 600;
-    font-size: 1.2rem;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-        Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-size: 2rem;
+    font-family: var(--gg-font-bebasneue);
 }
 
 .navLink:hover{
     color: var(--gg-text);
+}
+
+.login{
+    padding: .45em .75em;
+    font-size: 1.25rem;
+    font-family: var(--gg-font-inter);
+    background-color: var(--gg-yellow);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.login:hover{
+    cursor: pointer;
 }
 
 @media (max-width: 768px) {
@@ -102,5 +113,7 @@ div:has( > .logoLink > .logo){
         padding: .5rem 0;
         display: block;
         width: 100%;
+        font-size: 2rem;
+        font-family: var(--gg-font-bebasneue);
     }
 }
