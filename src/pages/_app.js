@@ -5,6 +5,7 @@ import { createBrowserSupabaseClient, Session } from '@supabase/auth-helpers-nex
 import { SessionContextProvider, useUser } from '@supabase/auth-helpers-react'
 import { useState } from 'react'
 import { Bebas_Neue, Inter } from '@next/font/google'
+import Header from '../components/Header'
 
 const bebasNeue = Bebas_Neue({
     weight: ['400'],
@@ -74,6 +75,7 @@ export default function App({ Component, pageProps }) {
                 <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
                 <meta name="theme-color" content="#ffffff"/>
             </Head>
+            <Header />
             <Component {...pageProps} />
         </SessionContextProvider>
     )
