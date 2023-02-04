@@ -5,17 +5,58 @@ import Link from 'next/link'
 import { supabase } from '../utils/supabase'
 import { useSessionContext, useSupabaseClient, useUser, User } from '@supabase/auth-helpers-react';
 import styles from '@/styles/Dashboard.module.css'
+import Meallog from '@/components/Meallog';
 
-export default function Header() {
+export default function Header({ meals }) {
+    // console.log({ meals })
+    // console.log(meals.meal_log)
+    // console.log(new Date())
 
     const metaTitle = 'Dashboard | GoodGrub'
     const metaDescription = 'Manage, view and track with GoodGrub. Better Food, Better Future.'
 
     const router = useRouter()
-
     const user = useUser()
 
-    console.log(useUser())
+    const [meal, setMeal] = useState({
+        "mealName": "",
+        "mealHealthiness": '',
+        "mealNotes": "",
+        "mealMood": 0,
+        "mealDate": new Date(),
+    })
+
+    console.log(meal)
+
+    const handleInput = (e) => {
+        const { name, value } = e.target
+        setMeal({ ...meal, [name]: value })
+    }
+
+    const handleFormSubmit = async (e) => {
+        e.preventDefault()
+
+        meals.meal_log.push(meal)
+
+        const { error } = await supabase
+            .from('profile')
+            .update({ meal_log: meals.meal_log })
+            .eq('id', user.id)
+
+        console.log('errors: ' + error)   
+
+        setMeal({
+            "mealName": "",
+            "mealHealthiness": '',
+            "mealNotes": "",
+            "mealMood": 0,
+            "mealDate": new Date(),
+        })
+
+        return alert('Meal Logged!')
+    }
+
+
 
     return(
         <>
@@ -25,27 +66,89 @@ export default function Header() {
                 <meta name="description" content={metaDescription} />
             </Head>
             {useUser() ?
+                // LOGGED IN
                 <main className={`${styles.loggedIn} container`}>
-                    <section className={styles.header}>
+                    <section className={styles['header', 'section']}>
                         <div className={styles.photoName}>
                             <img className={styles.profileImage} src={user.user_metadata.avatar_url}/>
                             <div className={styles.userMeta}>
                                 <h2>{user.user_metadata.full_name}</h2>
-                                <p>X Meals Logged</p>
+                                <p>{meals.meal_log.length} Meals Logged</p>
                             </div>
                         </div>
                         <div className={styles.userActions}>
-                            <button className={styles.newLog}>Log A Meal</button>
+                            <Link href='#log-a-meal' className={styles.newLog}>Log A Meal</Link>
                         </div>
                     </section>
-                    <section className={styles.meals}>
+                    <section className={styles.section}>
+                        <h2>Stats</h2>
+
+                    </section>
+                    <section id="log-a-meal" className={styles.section}>
+                        <h2>Log A Meal</h2>
+                        <form className={styles.logForm}>
+                            <label htmlFor="mealName">Meal Name</label>
+                            <input 
+                                onChange={handleInput} 
+                                type="text" 
+                                name="mealName" 
+                                id="mealName" 
+                                placeholder="Meal Name"
+                                value={meal.mealName}
+                            />
+                            <label htmlFor="mealNotes">Notes</label>
+                            <textarea 
+                                onChange={handleInput} 
+                                name="mealNotes" 
+                                id="mealNotes" 
+                                placeholder="Notes"
+                                value={meal.mealNotes}
+                            >
+                            </textarea>
+                            <label htmlFor="howHealthy">Rate the healthiness of the meal</label>
+                            <input 
+                                onChange={handleInput} 
+                                type="range" 
+                                name="mealHealthiness" 
+                                id="howHealthy" 
+                                min="1" 
+                                max="5" 
+                                value={meal.mealHealthiness} 
+                            />
+                            <label htmlFor="howIFeel">How do you feel today?</label>
+                            <select 
+                                onChange={handleInput} 
+                                name="mealMood" 
+                                id="howIFeel"
+                                value={meal.mealMood}
+                            >
+                                <option value="1">1 - Terrible</option>
+                                <option value="2">2 - Bad</option>
+                                <option value="3">3 - Okay</option>
+                                <option value="4">4 - Good</option>
+                                <option value="5">5 - Great</option>
+                            </select>
+                            <button type="submit" onClick={handleFormSubmit}>Log Meal</button>
+                        </form>
+                    </section>
+                    <section className={styles.section}>
                         <h2>Recently Logged Meals</h2>
                         <div className={styles.mealList}>
-                            
+                            {console.log(meals.meal_log)}
+                            {meals.meal_log.map((meal) => (
+                                <Meallog
+                                    mealName = {meal.mealName}
+                                    mealHealthiness = {meal.mealHealthiness}
+                                    mealNotes = {meal.mealNotes}
+                                    mealMood = {meal.mealMood}
+                                    mealDate = {meal.mealDate}
+                                />
+                            ))}
                         </div>
                     </section>
                 </main>
             :
+                // NOT LOGGED IN
                 <main className={`${styles.noLogin} container`}>
                     <h1>Page unavailable. Please login to view this page.</h1>
                     <Link href='/'>GO HOME</Link>
@@ -53,4 +156,18 @@ export default function Header() {
             }
         </>
     )
+}
+
+export const getServerSideProps = async () => {
+    const { data: meals, error } = await supabase
+        .from('profile')
+        .select('*')
+        .single()
+    console.log(meals)
+
+    return {
+        props: {
+            meals
+        }
+    }
 }
