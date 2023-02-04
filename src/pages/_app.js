@@ -1,5 +1,9 @@
 import '@/styles/globals.css'
 import Head from 'next/head'
+import { supabase } from '@/utils/supabase'
+import { createBrowserSupabaseClient, Session } from '@supabase/auth-helpers-nextjs'
+import { SessionContextProvider, useUser } from '@supabase/auth-helpers-react'
+import { useState } from 'react'
 import { Bebas_Neue, Inter } from '@next/font/google'
 
 const bebasNeue = Bebas_Neue({
@@ -20,8 +24,13 @@ export default function App({ Component, pageProps }) {
     const metaImage = 'https://goodgrub.tech/images/og-image.png'
     const metaUrl = 'https://goodgrub.tech/'
 
+    const [supabaseClient] = useState(() => createBrowserSupabaseClient())
+
     return (
-        <>
+        <SessionContextProvider
+        supabaseClient={supabaseClient}
+        initialSession={pageProps.initialSession}
+        >
             <style jsx global>{`
                 :root {
                     --gg-font-bebasneue: ${bebasNeue.style.fontFamily};
@@ -66,6 +75,6 @@ export default function App({ Component, pageProps }) {
                 <meta name="theme-color" content="#ffffff"/>
             </Head>
             <Component {...pageProps} />
-        </>
+        </SessionContextProvider>
     )
 }
