@@ -6,6 +6,7 @@ import { supabase } from '../utils/supabase'
 import { useSessionContext, useSupabaseClient, useUser, User } from '@supabase/auth-helpers-react';
 import styles from '@/styles/Dashboard.module.css'
 import Meallog from '@/components/Meallog';
+import { Client, AccountCreateTransaction, Hbar, PrivateKey, TransferTransaction, AccountBalanceQuery } from "@hashgraph/sdk";
 
 export default function Header({ meals }) {
     // console.log({ meals })
@@ -17,6 +18,11 @@ export default function Header({ meals }) {
 
     const router = useRouter()
     const user = useUser()
+
+    const client = Client.forTestnet();
+    client.setOperator(process.env.NEXT_PUBLIC_HEDERA_ACCOUNT_ID, process.env.NEXT_PUBLIC_HEDERA_PUBLIC_KEY);
+
+    console.log(client)
 
     const [meal, setMeal] = useState({
         "mealName": "",
@@ -53,7 +59,54 @@ export default function Header({ meals }) {
             "mealDate": new Date(),
         })
 
+        if(!meals.hedera_id){
+
+            const newAccountPrivateKey = PrivateKey.generateED25519(); 
+            const newAccountPublicKey = newAccountPrivateKey.publicKey;
+
+            const newAccount = await new AccountCreateTransaction()
+                .setKey(newAccountPublicKey)
+                .setInitialBalance(Hbar.fromTinybars(3))
+                .execute(client);
+
+            const getReceipt = await newAccount.getReceipt(client);
+            const newAccountId = getReceipt.accountId;
+
+            console.log("The new account ID is: " +newAccountId);
+
+            const accountBalance = await new AccountBalanceQuery()
+                .setAccountId(newAccountId)
+                .execute(client);
+
+            console.log("The new account balance is: " +accountBalance.hbars.toTinybars() +" tinybar.");
+
+            const { error } = await supabase
+                .from('profile')
+                .update({ hedera_id: newAccountId.toString() })
+                .eq('id', user.id)
+
+            console.log('errors: ' + error)
+
+            
+            const sendHbar = await new TransferTransaction()
+                .addHbarTransfer(process.env.NEXT_PUBLIC_HEDERA_ACCOUNT_ID, Hbar.fromTinybars(-3)) //Sending account
+                .addHbarTransfer(newAccountId, Hbar.fromTinybars(3)) //Receiving account
+                .execute(client);
+
+            return alert('Meal Logged!')
+        
+        }
+        
+        if(meals.hedera_id && meals.hedera_id != null){
+            const sendHbar = await new TransferTransaction()
+                .addHbarTransfer(process.env.NEXT_PUBLIC_HEDERA_ACCOUNT_ID, Hbar.fromTinybars(-3)) //Sending account
+                .addHbarTransfer(meals.hedera_id, Hbar.fromTinybars(3)) //Receiving account
+                .execute(client);
+        } 
+
         return alert('Meal Logged!')
+
+
     }
 
 
@@ -96,12 +149,12 @@ export default function Header({ meals }) {
                                 placeholder="Meal Name"
                                 value={meal.mealName}
                             />
-                            <label htmlFor="mealNotes">Notes</label>
+                            <label htmlFor="mealNotes">Meal Description</label>
                             <textarea 
                                 onChange={handleInput} 
                                 name="mealNotes" 
                                 id="mealNotes" 
-                                placeholder="Notes"
+                                placeholder="Meal Description"
                                 value={meal.mealNotes}
                             >
                             </textarea>
@@ -129,6 +182,7 @@ export default function Header({ meals }) {
                                 <option value="5">5 - Great</option>
                             </select>
                             <button type="submit" onClick={handleFormSubmit}>Log Meal</button>
+
                         </form>
                     </section>
                     <section className={styles.section}>
