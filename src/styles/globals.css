@@ -1,0 +1,48 @@
+html,
+body {
+    padding: 0;
+    margin: 0;
+    font-family: var(--gg-font-montserrat), var(--gg-font-inter), Segoe UI, Roboto, Oxygen,
+        Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    background-color: var(--matt-bg-color);
+    color: var(--matt-text);
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+* {
+    box-sizing: border-box;
+    max-width: 100%;
+    transition: all 0.1s;
+}
+
+.container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+@media (min-width: 576px) {
+    .container {
+        max-width: 560px;
+        width: 100%;
+    }
+}
+@media (min-width: 768px) {
+    .container {
+        max-width: 750px;
+        width: 100%;
+    }
+}
+@media (min-width: 992px) {
+    .container {
+        max-width: 980px;
+        width: 100%;
+    }
+}
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1185px;
+        width: 100%;
+    }
+}
