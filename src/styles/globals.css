@@ -1,11 +1,17 @@
+:root{
+    --gg-bg-color: rgb(19, 19, 26);
+    --gg-text: rgb(250, 250, 250);
+    --gg-yellow: rgb(246, 230, 0);
+}
+
 html,
 body {
     padding: 0;
     margin: 0;
-    font-family: var(--gg-font-montserrat), var(--gg-font-inter), Segoe UI, Roboto, Oxygen,
+    font-family: var(--gg-font-inter), Segoe UI, Roboto, Oxygen,
         Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-    background-color: var(--matt-bg-color);
-    color: var(--matt-text);
+    background-color: var(--gg-bg-color);
+    color: var(--gg-text);
     max-width: 100%;
     overflow-x: hidden;
 }
