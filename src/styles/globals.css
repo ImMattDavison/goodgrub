@@ -3,6 +3,9 @@
     --gg-bg-color-dull: rgb(26, 26, 36);
     --gg-bg-color-dull-translucent: rgba(26, 26, 36, 0.8);
     --gg-text: rgb(250, 250, 250);
+    --gg-text-dull: rgb(200, 200, 200);
+    --gg-text-dark: rgb(26, 26, 36);
+    --gg-text-dark-dull: rgb(56, 56, 66);
     --gg-yellow: rgb(246, 230, 0);
 }
 
@@ -16,6 +19,7 @@ body {
     color: var(--gg-text);
     max-width: 100%;
     overflow-x: hidden;
+    scroll-behavior: smooth;
 }
 
 * {
