@@ -44,7 +44,7 @@ export default function Home() {
                 <meta name="twitter:description" content={metaDescription} />
                 <meta name="twitter:image" content={metaImage} />
             </Head>
-            {!useUser() ? <button onClick={login}>Log In</button> : <button>Sign Out</button>}
+            
         </>
     )
 }
