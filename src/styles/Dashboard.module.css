@@ -45,6 +45,33 @@
     margin: 0;
 }
 
+.stats{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    margin-block: 1em;
+    gap: 2em;
+}
+
+.stat{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+    background-color: var(--gg-bg-color);
+    gap: 1em;
+    padding: 1em;
+    border-radius: .5em;
+}
+
+.stat h3, .stat p{
+    margin-block: .1em;
+}
+
 .logForm{
     display: flex;
     flex-direction: column;
