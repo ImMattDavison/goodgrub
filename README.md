@@ -1,9 +1,8 @@
 <p align='center'>
 <img src='/public/images/logo.png' alt='GoodGrub Logo' width='500px'>
 <h1 align='center'>GoodGrub</h1>
-</p>
-
 GoodGrub is the way to track your diet. Track your meals and health alongside each other. Earn Hedera TinyBar rewards for your healthy habits. Better Food, Better Future.
+</p>
 
 ## Development
 
