@@ -44,7 +44,50 @@ export default function Home() {
                 <meta name="twitter:description" content={metaDescription} />
                 <meta name="twitter:image" content={metaImage} />
             </Head>
-            
+            <section className={styles.hero}>
+                <h1>
+                    GOODGRUB
+                </h1>
+                <p>
+                    Better Food, Better Future
+                </p>
+            </section>
+            <section className={`${styles.info} container`}>
+                <div>
+                    <h2>
+                        Track your food intake
+                    </h2>
+                </div>
+                <div className={styles.infoContainer}>
+                    <p>
+                        Want to track your food intake and improve your health? GoodGrub allows you to track your eating and healt. Use GoodGrub to track your meals and have a better future.
+                    </p>
+                </div>
+            </section>
+            <section className={`${styles.info} container`}>
+                <div className={styles.infoContainer}>
+                    <p>
+                        Tracking your health alongside yor diet allows you to identify issues between your diet and your health sooner. Use GoodGrub to track your meals and have a better future.
+                    </p>
+                </div>
+                <div>
+                    <h2>
+                        Identify issues sooner
+                    </h2>
+                </div>
+            </section>
+            <section className={`${styles.info} container`}>
+                <div>
+                    <h2>
+                        Get rewarded for tracking
+                    </h2>
+                </div>
+                <div className={styles.infoContainer}>
+                    <p>
+                        Everytime you log a meal on GoodGrub we'll send you a few Hedera TinyBar (HBars) to your Hedera Wallet. Use GoodGrub to track your meals and have a better future.
+                    </p>
+                </div>
+            </section>
         </>
     )
 }
