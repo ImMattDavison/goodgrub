@@ -8,7 +8,7 @@ import styles from '@/styles/Dashboard.module.css'
 import Meallog from '@/components/Meallog';
 import { Client, AccountCreateTransaction, Hbar, PrivateKey, TransferTransaction, AccountBalanceQuery } from "@hashgraph/sdk";
 
-export default function Header({ meals }) {
+export default function Header({ meals, userBalance }) {
     // console.log({ meals })
     // console.log(meals.meal_log)
     // console.log(new Date())
@@ -23,6 +23,7 @@ export default function Header({ meals }) {
     client.setOperator(process.env.NEXT_PUBLIC_HEDERA_ACCOUNT_ID, process.env.NEXT_PUBLIC_HEDERA_PUBLIC_KEY);
 
     console.log(client)
+    console.log(userBalance)
 
     const [meal, setMeal] = useState({
         "mealName": "",
@@ -135,7 +136,20 @@ export default function Header({ meals }) {
                     </section>
                     <section className={styles.section}>
                         <h2>Stats</h2>
-
+                        <div className={styles.stats}>
+                            <div className={styles.stat}>
+                                <h3>Meals Logged</h3>
+                                <p>{meals.meal_log.length}</p>
+                            </div>
+                            <div className={styles.stat}>
+                                <h3>Hedera ID</h3>
+                                <p>{meals.hedera_id ? meals.hedera_id : 'Log a meal to unlock.'}</p>
+                            </div>
+                            <div className={styles.stat}>
+                                <h3>TinyBar Balance</h3>
+                                <p>{userBalance}</p>
+                            </div>
+                        </div>
                     </section>
                     <section id="log-a-meal" className={styles.section}>
                         <h2>Log A Meal</h2>
@@ -219,9 +233,21 @@ export const getServerSideProps = async () => {
         .single()
     console.log(meals)
 
+    const client = Client.forTestnet();
+    client.setOperator(process.env.NEXT_PUBLIC_HEDERA_ACCOUNT_ID, process.env.NEXT_PUBLIC_HEDERA_PUBLIC_KEY);
+
+    const getNewBalance = await new AccountBalanceQuery()
+        .setAccountId(meals.hedera_id)
+        .execute(client);
+
+    console.log("The account balance after the transfer is: " +getNewBalance.hbars.toTinybars() +" tinybar.")
+
+    const userBalance = getNewBalance.hbars.toTinybars() + " tinybar"
+
     return {
         props: {
-            meals
+            meals,
+            userBalance
         }
     }
 }
