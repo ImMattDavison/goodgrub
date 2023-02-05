@@ -3,17 +3,40 @@
     flex: 0 0 100%;
     flex-direction: column;
     justify-content: center;
-    width: 100%;
+    width: 100vw;
     background-color: var(--gg-bg-color);
     margin-block: 1em;
     padding: 1em;
     border-radius: 0.5em;
 }
 .mealName{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    display: block;
     width: 100%;
     background-color: var(--gg-bg-color);
     margin-block: .1em;
+}
+
+.mealStats{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-block: .1em;
+}
+
+.mealNotes{
+    display: block;
+    width: 100%;
+    background-color: var(--gg-bg-color);
+    margin-block: 1em;
+}
+
+.mealNotes h4{
+    margin-block: 0em;
+    font-size: 1.65rem;
+}
+
+.mealNotes p{
+    margin-block: .5em 0em;
 }
