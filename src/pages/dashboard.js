@@ -203,7 +203,7 @@ export default function Header({ meals, userBalance }) {
                         <h2>Recently Logged Meals</h2>
                         <div className={styles.mealList}>
                             {console.log(meals.meal_log)}
-                            {meals.meal_log.map((meal) => (
+                            {meals.meal_log.slice(0).reverse().map((meal) => (
                                 <Meallog
                                     mealName = {meal.mealName}
                                     mealHealthiness = {meal.mealHealthiness}
@@ -226,7 +226,7 @@ export default function Header({ meals, userBalance }) {
     )
 }
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (user) => {
     const { data: meals, error } = await supabase
         .from('profile')
         .select('*')
@@ -236,13 +236,49 @@ export const getServerSideProps = async () => {
     const client = Client.forTestnet();
     client.setOperator(process.env.NEXT_PUBLIC_HEDERA_ACCOUNT_ID, process.env.NEXT_PUBLIC_HEDERA_PUBLIC_KEY);
 
+    if(!meals.hedera_id){
+
+        const newAccountPrivateKey = PrivateKey.generateED25519(); 
+        const newAccountPublicKey = newAccountPrivateKey.publicKey;
+
+        const newAccount = await new AccountCreateTransaction()
+            .setKey(newAccountPublicKey)
+            .setInitialBalance(Hbar.fromTinybars(0))
+            .execute(client);
+
+        const getReceipt = await newAccount.getReceipt(client);
+        const newAccountId = getReceipt.accountId;
+
+        console.log("The new account ID is: " +newAccountId);
+
+        const accountBalance = await new AccountBalanceQuery()
+            .setAccountId(newAccountId)
+            .execute(client);
+
+        console.log("The new account balance is: " +accountBalance.hbars.toTinybars() +" tinybar.");
+
+        const { error } = await supabase
+            .from('profile')
+            .update({ hedera_id: newAccountId.toString() })
+            .eq('id', user.id)
+
+        console.log('errors: ' + error)
+
+        return {
+            props: {
+                meals,
+                userBalance: accountBalance.hbars.toTinybars() + " tinybar"
+            }
+        }
+    }
+
     const getNewBalance = await new AccountBalanceQuery()
         .setAccountId(meals.hedera_id)
         .execute(client);
 
-    console.log("The account balance after the transfer is: " +getNewBalance.hbars.toTinybars() +" tinybar.")
+        console.log("The account balance after the transfer is: " +getNewBalance.hbars.toTinybars() +" tinybar.")
 
-    const userBalance = getNewBalance.hbars.toTinybars() + " tinybar"
+        let userBalance = getNewBalance.hbars.toTinybars() + " tinybar"
 
     return {
         props: {
